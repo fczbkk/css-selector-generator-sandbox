@@ -5,41 +5,60 @@ interface TagInfo {
   lineNumber: number;
 }
 
+// Convert character position to line number
+function positionToLine(source: string, position: number): number {
+  let line = 0;
+  for (let i = 0; i < position && i < source.length; i++) {
+    if (source[i] === '\n') {
+      line++;
+    }
+  }
+  return line;
+}
+
+// Find all comment ranges in the source
+function findCommentRanges(htmlSource: string): Array<[number, number]> {
+  const ranges: Array<[number, number]> = [];
+  const commentRegex = /<!--[\s\S]*?-->/g;
+
+  let match;
+  while ((match = commentRegex.exec(htmlSource)) !== null) {
+    ranges.push([match.index, match.index + match[0].length]);
+  }
+
+  return ranges;
+}
+
+// Check if a position is inside any comment range
+function isInsideComment(position: number, commentRanges: Array<[number, number]>): boolean {
+  for (const [start, end] of commentRanges) {
+    if (position >= start && position < end) {
+      return true;
+    }
+  }
+  return false;
+}
+
 // Parse HTML source to find all opening tags and their line numbers
 function parseOpeningTags(htmlSource: string): TagInfo[] {
   const tags: TagInfo[] = [];
-  const lines = htmlSource.split('\n');
+  const commentRanges = findCommentRanges(htmlSource);
 
-  // Regex to match opening tags (not closing tags, not self-closing)
-  // Matches: <tagname or <tagname attributes...
-  const openingTagRegex = /<([a-zA-Z][a-zA-Z0-9]*)\b[^>]*(?<!\/)\s*>/g;
-  // Also match self-closing tags
-  const selfClosingRegex = /<([a-zA-Z][a-zA-Z0-9]*)\b[^>]*\/\s*>/g;
+  // Match opening tags (including self-closing)
+  // Regex requires letter after <, so closing tags (</tag>) won't match
+  const tagRegex = /<([a-zA-Z][a-zA-Z0-9]*)\b[^>]*\/?>/g;
 
-  for (let lineIndex = 0; lineIndex < lines.length; lineIndex++) {
-    const line = lines[lineIndex];
-
-    // Find all opening tags in this line
-    let match;
-
-    // Reset regex lastIndex for each line check
-    openingTagRegex.lastIndex = 0;
-    while ((match = openingTagRegex.exec(line)) !== null) {
-      tags.push({
-        tagName: match[1].toLowerCase(),
-        lineNumber: lineIndex,
-      });
+  let match;
+  while ((match = tagRegex.exec(htmlSource)) !== null) {
+    // Skip tags inside HTML comments
+    if (isInsideComment(match.index, commentRanges)) {
+      continue;
     }
 
-    // Also handle self-closing tags (they still create elements)
-    selfClosingRegex.lastIndex = 0;
-    while ((match = selfClosingRegex.exec(line)) !== null) {
-      tags.push({
-        tagName: match[1].toLowerCase(),
-        lineNumber: lineIndex,
-      });
-    }
-
+    tags.push({
+      tagName: match[1].toLowerCase(),
+      lineNumber: positionToLine(htmlSource, match.index),
+    });
   }
 
   return tags;
