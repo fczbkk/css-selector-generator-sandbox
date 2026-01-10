@@ -2,6 +2,8 @@
 
 A playground for testing [css-selector-generator](https://github.com/fczbkk/css-selector-generator) library.
 
+**Try it live:** https://fczbkk.github.io/css-selector-generator-sandbox/
+
 ## Usage
 
 ```bash
