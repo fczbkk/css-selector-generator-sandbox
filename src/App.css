@@ -49,6 +49,26 @@ body {
   height: 100%;
 }
 
+.app-title {
+  padding: var(--spacing-medium);
+  border-bottom: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.app-title h1 {
+  font-size: var(--font-size-base);
+  margin-bottom: var(--spacing-small);
+}
+
+.app-title p {
+  font-size: var(--font-size-small);
+  color: var(--color-text-muted);
+}
+
+.app-title a {
+  color: var(--color-text);
+}
+
 .headers {
   display: flex;
   flex-shrink: 0;

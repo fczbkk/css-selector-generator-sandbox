@@ -45,6 +45,14 @@ function App() {
 
   return (
     <div className="app">
+      <div className="app-title">
+        <h1>CSS Selector Generator Sandbox</h1>
+        <p>
+          A playground for testing{' '}
+          <a href="https://github.com/fczbkk/css-selector-generator#readme">css-selector-generator</a>,
+          a JavaScript library that generates unique CSS selectors for any HTML element.
+        </p>
+      </div>
       <div className="headers">
         <div className="panel-header">
           HTML
