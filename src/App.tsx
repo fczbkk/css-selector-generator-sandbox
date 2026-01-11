@@ -4,15 +4,48 @@ import { SelectorPanel } from './components/SelectorPanel';
 import { mapSelectorsToLines, getLineCount, type SelectorWithTiming } from './utils/selectorMapper';
 import { formatHtml } from './utils/formatHtml';
 
-const SAMPLE_HTML = `<div class="container">
-  <header>
-    <h1>Hello World</h1>
-  </header>
-  <main>
-    <p>First paragraph</p>
-    <p>Second paragraph</p>
-  </main>
-</div>`;
+const SAMPLE_HTML = `<section class="demo">
+  <article>
+    This article tag is unique, so selector is just: article
+  </article>
+
+  <div class="unique-class">
+    This div has a unique class, so selector is: .unique-class
+  </div>
+
+  <div class="shared specific">
+    This div needs multiple classes for uniqueness: .shared.specific
+  </div>
+  <div class="shared other">
+    The "shared" class alone is not unique.
+  </div>
+  <div class="specific another">
+    The "specific" class alone is not unique either.
+  </div>
+
+  <div class="parent">
+    <div class="child">
+      This needs ancestor context: .parent .child
+    </div>
+  </div>
+  <div class="other-parent">
+    <div class="child">
+      The "child" class is not unique without parent.
+    </div>
+  </div>
+
+  <div class="fallback-examples">
+    <div>
+      It is not possible to generate nicer selectors for these elements, so we generate a fallback selector, which uses chain of :nth-child descendants from the root to the element, to make it unique.
+    </div>
+    <div>
+      Another element requiring fallback selector.
+    </div>
+    <div>
+      Third fallback example.
+    </div>
+  </div>
+</section>`;
 
 function App() {
   const [htmlSource, setHtmlSource] = useState(SAMPLE_HTML);
