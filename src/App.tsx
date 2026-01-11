@@ -19,16 +19,18 @@ function App() {
   const [selectorsByLine, setSelectorsByLine] = useState<Map<number, SelectorWithTiming[]>>(new Map());
   const [totalTimeMs, setTotalTimeMs] = useState(0);
   const [showInfoPopover, setShowInfoPopover] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const updateSelectors = useCallback(() => {
-    if (!containerRef.current) return;
+    if (!iframeRef.current?.contentDocument) return;
 
-    // Update the hidden container with the HTML
-    containerRef.current.innerHTML = htmlSource;
+    const doc = iframeRef.current.contentDocument;
 
-    // Generate selectors
-    const result = mapSelectorsToLines(htmlSource, containerRef.current);
+    // Write HTML to the iframe's document body
+    doc.body.innerHTML = htmlSource;
+
+    // Generate selectors using the iframe's body as root
+    const result = mapSelectorsToLines(htmlSource, doc.body);
     setSelectorsByLine(result.selectorsByLine);
     setTotalTimeMs(result.totalTimeMs);
   }, [htmlSource]);
@@ -85,7 +87,7 @@ function App() {
           <SelectorPanel selectorsByLine={selectorsByLine} lineCount={lineCount} />
         </div>
       </div>
-      <div ref={containerRef} className="hidden-container" />
+      <iframe ref={iframeRef} className="hidden-container" title="HTML Renderer" />
     </div>
   );
 }
