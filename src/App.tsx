@@ -74,6 +74,12 @@ function App() {
 
   const lineCount = getLineCount(htmlSource);
 
+  // Calculate total element count
+  const elementCount = Array.from(selectorsByLine.values()).reduce(
+    (total, selectors) => total + selectors.length,
+    0
+  );
+
   const handleFormat = () => {
     setHtmlSource(formatHtml(htmlSource));
   };
@@ -96,7 +102,7 @@ function App() {
         <div className="panel-header">
           CSS Selectors
           <span className="total-time">
-            {totalTimeMs.toFixed(2)} ms
+            {elementCount} elements, {totalTimeMs.toFixed(2)} ms
             <button
               className="info-btn"
               onClick={() => setShowInfoPopover(!showInfoPopover)}
