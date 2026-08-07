@@ -1,8 +1,15 @@
 # CSS Selector Generator Sandbox
 
-A playground for testing [css-selector-generator](https://github.com/fczbkk/css-selector-generator) library.
+> **This project has moved.** It now lives in the
+> [css-selector-generator](https://github.com/fczbkk/css-selector-generator)
+> repository, under `packages/css-selector-generator-sandbox`.
+>
+> **Try it at <https://fczbkk.github.io/css-selector-generator/sandbox/>**
+>
+> This repository is kept only so that existing links keep working.
+> Its history was preserved in the move.
 
-**Try it live:** https://fczbkk.github.io/css-selector-generator-sandbox/
+A playground for testing [css-selector-generator](https://github.com/fczbkk/css-selector-generator) library.
 
 ## Usage
 
